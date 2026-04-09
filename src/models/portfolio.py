@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Decimal, DateTime, Index
+from sqlalchemy import Column, String, Numeric, DateTime, Index
 from .base import BaseModel
 
 class Portfolio(BaseModel):
@@ -6,12 +6,12 @@ class Portfolio(BaseModel):
     
     token_address = Column(String(50), nullable=False)
     chain = Column(String(20), nullable=False)
-    quantity = Column(Decimal(20, 8), nullable=False)
-    entry_price = Column(Decimal(20, 8), nullable=False)
-    current_price = Column(Decimal(20, 8), nullable=False)
-    unrealized_pnl = Column(Decimal(15, 2), nullable=False)
-    peak_price = Column(Decimal(20, 8), nullable=False)
-    trailing_stop_price = Column(Decimal(20, 8), nullable=False)
+    quantity = Column(Numeric(20, 8), nullable=False)
+    entry_price = Column(Numeric(20, 8), nullable=False)
+    current_price = Column(Numeric(20, 8), nullable=False)
+    unrealized_pnl = Column(Numeric(15, 2), nullable=False)
+    peak_price = Column(Numeric(20, 8), nullable=False)
+    trailing_stop_price = Column(Numeric(20, 8), nullable=False)
     entry_time = Column(DateTime(timezone=True), nullable=False)
     last_checked = Column(DateTime(timezone=True), nullable=False)
     

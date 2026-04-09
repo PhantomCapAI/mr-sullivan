@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, Integer, Decimal, DateTime
+from sqlalchemy import Column, String, Text, Integer, Numeric, DateTime
 from .base import BaseModel
 
 class Blacklist(BaseModel):
@@ -8,5 +8,5 @@ class Blacklist(BaseModel):
     chain = Column(String(20), nullable=False)
     reason = Column(Text, nullable=False)
     original_signal_score = Column(Integer)
-    loss_amount = Column(Decimal(15, 2))
+    loss_amount = Column(Numeric(15, 2))
     blacklisted_at = Column(DateTime(timezone=True), nullable=False)
