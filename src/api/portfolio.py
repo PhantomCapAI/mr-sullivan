@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from typing import List
+from typing import List, Optional
 from src.database import get_db_transaction
 from src.models.portfolio import Portfolio
 from src.api.auth import verify_token

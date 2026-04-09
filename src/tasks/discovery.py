@@ -7,7 +7,7 @@ from src.models.signal import Signal, ActionTaken
 from src.models.blacklist import Blacklist
 from config.settings import settings
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +100,7 @@ async def process_token_signal(token_data: Dict):
             recent_signal = db.query(Signal).filter(
                 Signal.token_address == token_address,
                 Signal.chain == chain,
-                Signal.created_at >= func.now() - text("INTERVAL '1 hour'")
+                Signal.created_at >= datetime.now(timezone.utc) - timedelta(hours=1)
             ).first()
             
             if recent_signal:
