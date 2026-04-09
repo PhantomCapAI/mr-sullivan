@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Any
 from config.settings import settings
 from src.redis_client import redis_client
 import logging
-import ed25519
+from nacl.signing import SigningKey
 import binascii
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class GMGNService:
     def __init__(self):
         self.base_url = "https://gmgn.ai/api/v1"
         self.api_key = settings.GMGN_API_KEY
-        self.private_key = ed25519.SigningKey(binascii.unhexlify(settings.GMGN_ED25519_PRIVATE_KEY))
+        self.private_key = SigningKey(binascii.unhexlify(settings.GMGN_ED25519_PRIVATE_KEY))
         self.rate_limit_window = 60
         self.max_requests_per_window = settings.GMGN_RATE_LIMIT_PER_MINUTE
         self.circuit_breaker_threshold = 5
@@ -45,8 +45,9 @@ class GMGNService:
         """Create authenticated headers for GMGN API"""
         # Create signature for trading operations
         message = f"{timestamp}{client_id}".encode()
-        signature = self.private_key.sign(message)
-        
+        signed = self.private_key.sign(message)
+        signature = signed.signature  # First 64 bytes = signature only
+
         return {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
