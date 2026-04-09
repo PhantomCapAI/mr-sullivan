@@ -8,11 +8,25 @@ logger = logging.getLogger(__name__)
 
 class TelegramAlertService:
     def __init__(self):
-        self.bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+        self.bot = None
         self.chat_id = settings.TELEGRAM_CHAT_ID
-        
+        self._available = False
+
+        if settings.TELEGRAM_BOT_TOKEN:
+            try:
+                self.bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+                self._available = True
+                logger.info("Telegram bot initialized")
+            except Exception as e:
+                logger.warning(f"Telegram unavailable: {e}")
+        else:
+            logger.warning("TELEGRAM_BOT_TOKEN not set. Running without Telegram alerts.")
+
     async def send_alert(self, message: str, parse_mode: str = "HTML"):
         """Send alert message to Telegram"""
+        if not self._available:
+            logger.debug("Telegram alert skipped (not configured)")
+            return
         try:
             await self.bot.send_message(
                 chat_id=self.chat_id,

@@ -10,10 +10,21 @@ logger = logging.getLogger(__name__)
 
 class ReasoningService:
     def __init__(self):
-        self.client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+        self.client = None
+        self._available = False
         self.model = "claude-3-sonnet-20240229"
         self.max_calls_per_hour = settings.MAX_CLAUDE_CALLS_PER_HOUR
         self.cache_ttl = settings.CLAUDE_CACHE_TTL_SECONDS
+
+        if settings.ANTHROPIC_API_KEY:
+            try:
+                self.client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+                self._available = True
+                logger.info("Anthropic client initialized")
+            except Exception as e:
+                logger.warning(f"Anthropic unavailable: {e}")
+        else:
+            logger.warning("ANTHROPIC_API_KEY not set. Claude reasoning disabled.")
     
     async def _check_rate_limit(self) -> bool:
         """Check if we can make another Claude API call"""
@@ -35,6 +46,10 @@ class ReasoningService:
     
     async def analyze_signal(self, signal_data: Dict) -> Optional[Dict]:
         """Analyze a trading signal using Claude"""
+        if not self._available:
+            logger.debug("Claude analysis skipped (not configured)")
+            return None
+
         # Check cache first
         cache_key = f"claude_analysis:{signal_data['token_address']}:{signal_data['chain']}"
         cached_result = await redis_client.get(cache_key)

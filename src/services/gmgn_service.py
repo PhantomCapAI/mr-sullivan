@@ -46,14 +46,13 @@ class GMGNService:
         # Create signature for trading operations
         message = f"{timestamp}{client_id}".encode()
         signed = self.private_key.sign(message)
-        signature = signed.signature  # First 64 bytes = signature only
 
         return {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
             "X-Timestamp": str(timestamp),
             "X-Client-ID": client_id,
-            "X-Signature": binascii.hexlify(signature).decode()
+            "X-Signature": binascii.hexlify(signed.signature).decode()
         }
     
     async def _make_request(self, endpoint: str, params: Dict = None, method: str = "GET") -> Dict:

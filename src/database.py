@@ -7,7 +7,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# SQLite needs StaticPool; Postgres uses QueuePool
 if settings.DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
         settings.DATABASE_URL,
