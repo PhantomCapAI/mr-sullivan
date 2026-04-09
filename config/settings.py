@@ -34,17 +34,22 @@ class Settings(BaseSettings):
     # Risk Management
     TRAILING_STOP_PERCENT: float = 15.0
     TAKE_PROFIT_PERCENT: float = 100.0
+    STOP_LOSS_PERCENT: float = 25.0
     DAILY_LOSS_LIMIT_PERCENT: float = 10.0
     WEEKLY_LOSS_LIMIT_PERCENT: float = 20.0
 
     # Position Sizing
     DEFAULT_POSITION_SIZE_USD: float = 100.0
     MAX_POSITION_SIZE_USD: float = 500.0
+    DEFAULT_SLIPPAGE_TOLERANCE: float = 0.05
 
     # Authentication
+    SECRET_KEY: str = "phantom-sullivan-paper-mode"
+    ALGORITHM: str = "HS256"
     JWT_SECRET_KEY: str = "phantom-sullivan-paper-mode"
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_HOURS: int = 24
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
     class Config:
         env_file = ".env"
