@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_CHAT_ID: str = "1516882079"
 
+    # Solana RPC
+    RPC_URL: str = ""
+    WS_URL: str = ""
+
     # Redis
     REDIS_URL: str = ""
 
